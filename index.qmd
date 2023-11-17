@@ -47,7 +47,12 @@ weeks gestation or at least 400 grams birthweight.
 
 Birthweight statistics are regularly reported on, for example in the [annual Mothers and Babies reports](https://www.health.nsw.gov.au/hsnsw/Pages/mothers-and-babies-reports.aspx), produced by NSW Health. Birthweight is also the subject of numerous academic studies, for example, the recent journal article [Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales](https://doi.org/10.3390/ijerph18073417)[^1] 
 
+::: {.callout-tip}
+## Studying Health Data Science at UNSW
+
 Learn about how data are generated and used in the Australian health system in the course [HDAT9100 Context for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9100).
+:::
+
 
 
 [^1]: Ghimire, P.R.; Mooney, J.; Fox, L.; Dubois, L. Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales. Int. J. Environ. Res. Public Health 2021, 18, 3417. https://doi.org/10.3390/ijerph18073417
@@ -73,7 +78,18 @@ cat("Which of the following is **not** a risk factor for low birthweight?", long
 
 
 
-## Exploratory data analysis
+## Data analysis
+
+Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets. For this example, we will use the `birthwt` dataset. This dataset includes ten variables collected on 189 mother-baby dyads. The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
+
+The `birthwt` dataset, is shipped with the `MASS` R package, so we will load this first by calling `library(MASS)`. We'll also load the `dplyr` package, which has helpful tools for data manipulation. 
+
+::: {.callout-note}
+## R Packages
+
+R packages are collections of R functions, data, and compiled code bundled together in a standardised format. These packages extend the functionality of base R by providing additional tools for specific tasks or domains. R packages can be created by anyone and are typically shared with the R community through platforms like CRAN (Comprehensive R Archive Network) or GitHub.
+
+:::
 
 ```{r}
 #| echo: true
@@ -102,13 +118,13 @@ birthwt |>
 
 For example, we can see that the median maternal age is 23 years and 39% of mums in this dataset smoked smoked during pregnancy.
 
-#### Test your understanding
+### Test your understanding
 
 ::: {.webex-check .webex-box}
 
 True or False? The oldest maternal age recorded was 40 years? `r torf(FALSE)`
 
-The median maternal age was `r fitb(2977)` grams.
+The median birthweight was `r fitb(2977)` grams.
 :::
 
 ```{r}
@@ -118,6 +134,12 @@ birthwt |>
   summarise(mean = mean(bwt))
 
 ```
+
+::: {.callout-tip}
+## Studying Health Data Science at UNSW
+
+Learn how to extract actionable insights from health data in the course [HDAT9200 Statistical Foundations for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9200).
+:::
 
 ::: {.panel-tabset .nav-pills}
 
@@ -198,8 +220,14 @@ ggplot(
       theme(legend.position = 'top')
 ```
 
+::: {.callout-tip}
+## Studying Health Data Science at UNSW
 
-#### Test your understanding
+Learn how to tell compelling visual stories with data in the course [HDAT9800 Visualisation & Communication](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9800).
+:::
+
+
+### Test your understanding
 
 ::: {.webex-check .webex-box}
 
@@ -223,7 +251,7 @@ Which statement is most accurate based on the figure above?
 
 
 
-### Exercise
+### Interactive exercise
 
 ```{r}
 #| echo: false
@@ -267,10 +295,18 @@ model2 <- lm(bwt ~ smoke + age, data = birthwt)
 tab_model(model2, digits = 0, title = 'Birthweight')
 ```
 
+::: {.callout-tip}
+## Studying Health Data Science at UNSW
+
+Learn how to tell model realistically complex health data in the course [HDAT9700 Statistical Modelling II](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9700).
+:::
+
 ::: {.webex-check .webex-box}
 
 The estimated coefficient for maternal age is `r fitb(11)`
 
 True or False? The 95% confidence interval for the coefficient of age includes 0 `r torf(TRUE)`
 :::
+
+
 
