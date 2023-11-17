@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: ""
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+format:
+  html:
+    css: [webex.css]
+    include-after-body: [webex.js]
+    embed-resources: true
+    theme: cosmo
+    toc: true
+    link-external-icon: true
+    link-external-newwindow: true
+    footnotes-hover: true
+
