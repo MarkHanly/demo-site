@@ -9,13 +9,24 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(webexercises)
 library(colorspace)
 library(sjPlot)
+library(MASS)
+library(dplyr)
+
+
+birthwt <- birthwt |> 
+  filter(age <= 40) |> 
+  mutate(
+    smoke = factor(smoke, labels = c('Non-smoking', 'Smoking')),
+    ht = factor(ht, labels = c('No history of hypertension', 'History of hypertension'))
+  )
+
 ```
 
 ## Overview
 
-Welcome! In this interactive tutorial you will learn how to use data science skills to analyses maternal and child health. Specifically you will be exploring birthweight and factors that can lead to low birthweight using the R statistical software.
+Welcome! In this interactive tutorial you will learn to use data science skills to analyse maternal and child health. Specifically you will be exploring birthweight and factors that can lead to low birthweight using the R statistical software.
 
-***Note** This section is designed as an interactive tutorial, so get ready to be presented with questions and exercises! The reading time is around 20 minutes and this should give you a gentle introduction to the types of content covered in the Masters of Science in Health Data Science.*
+[***Note** This section is designed as an interactive tutorial, so get ready to be presented with questions and exercises! The reading time is around 20 minutes and this should give you a gentle introduction to the types of content covered in the Masters of Science in Health Data Science. It is possible to complete this tutorial on a phone screen, but the interactive sections will be easier to compelte on a larger screen*]{style="color:grey;"}
 
 ### Why Study Birthweight?
 
@@ -56,7 +67,9 @@ Learn about how data are generated and used in the Australian health system in [
 ::::
 
 ::: {.webex-check .webex-box}
-### Test your understanding
+### [`r fontawesome::fa('circle-question')` Test your understanding]{style="text-align:center;"}
+
+***
 
 True or False? A boy born weighing 2.2kg would be classified as low birthweight? `r torf(TRUE)`
 
@@ -79,28 +92,16 @@ cat("Which of the following is **not** a risk factor for low birthweight?", long
 
 ### Introduction 
 
-Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets, including the `birthwt` dataset which has ten variables collected on 189 mother-baby pairs The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
+Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets, including the `birthwt` dataset which has ten variables collected on 188 mother-baby pairs The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
 
 ![created by Stable Diffusion](Images/expecting-mum.png)
 
 The `birthwt` dataset, is shipped with the `MASS` R package, so we will load this first by calling `library(MASS)`. We'll also load the `dplyr` package, which has helpful tools for data manipulation.
 
-::: callout-note
-## R Packages
+::: {.column-margin}
+![Artwork by [\@allison_horst](https://allisonhorst.com/)](images/horst_monsters_data_wrangling.png)
 
-::: columns
-::: {.column width="60%"}
-R packages are collections of R functions, data, and compiled code bundled together in a standardised format. These packages extend the functionality of base R by providing additional tools for specific tasks or domains. R packages can be created by anyone and are typically shared with the R community through platforms like CRAN (Comprehensive R Archive Network) or GitHub.
-:::
-
-::: {.column width="10%"}
-<!-- empty column to create gap -->
-:::
-
-::: {.column width="30%"}
-![`dplyr` is a popular and highly useful package for data manipulation. Artwork by [\@allison_horst](https://allisonhorst.com/)](images/horst_monsters_data_wrangling.png)
-:::
-:::
+**R packages** are collections of R functions, data, and compiled code bundled together in a standardised format. These packages extend the functionality of base R by providing additional tools for specific tasks or domains. R packages can be created by anyone and are typically shared with the R community through platforms like CRAN (Comprehensive R Archive Network) or GitHub. `dplyr` is a popular and highly useful package for data manipulation.
 :::
 
 Below is an example of the R code you would write to load the required packages and view the first few records for the `birthwt` dataset.
@@ -111,9 +112,13 @@ Below is an example of the R code you would write to load the required packages 
 
 ```{r}
 #| echo: true
+#| eval: false
 library(MASS) # Includes the birthweight dataset
 library(dplyr) # Tools for manipulating data
 
+```
+
+```{r}
 birthwt |> 
   select(age, smoke, ht, bwt) |> 
   head()
@@ -137,11 +142,13 @@ birthwt |>
 
 ```
 
-For example, we can see that in this dataset the median maternal age is 23 years and around 39% of mums smoked during pregnancy.
-
-### Test your understanding
+For example, we can see that in this dataset the median maternal age is 22.5 years and around 74 mums smoked during pregnancy.
 
 ::: {.webex-check .webex-box}
+### [`r fontawesome::fa('circle-question')` Test your understanding]{style="text-align:center;"}
+
+*** 
+
 True or False? The oldest maternal age recorded was 40 years? `r torf(FALSE)`
 
 The median birthweight was `r fitb(2977)` grams.
@@ -157,7 +164,7 @@ birthwt |>
 
 ```
 
-There is clearly an association between maternal smoking and birthweight. The average birthweight was 3,056 grams for children born to non-smokers compared to 2,772 grams for children born to mums who smoked during pregnancy.
+There is clearly an association between maternal smoking and birthweight. The average birthweight was 3,039 grams for children born to non-smokers compared to 2,772 grams for children born to mums who smoked during pregnancy.
 
 ***
 :::: {.column-margin}
@@ -170,9 +177,8 @@ Learn how to extract actionable insights from health data in [HDAT9200 Statistic
 
 ::::
 
-***
 
-### Interactive exercise
+### `r fontawesome::fa('code')` Interactive exercise
 
 Now it's your turn to try coding! In this interactive exercise, update the code below to calculate the average birthweight among mums who did and did not have a history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`. 
 
@@ -202,7 +208,7 @@ birthwt |>
 
 True or False? Children born to mothers with a history of hypertension have lower birthweights on average? `r torf(TRUE)`
 
-The difference in birthweight between children born to mothers with and without hypertension (to the nearest gram) is `r fitb(435)` grams.
+The difference in birthweight between children born to mothers with and without hypertension (to the nearest gram) is `r fitb(424)` grams.
 :::
 
 ------------------------------------------------------------------------
@@ -215,22 +221,11 @@ Imagine being armed with the ability to uncover hidden patterns, communicate com
 
 ![created by Stable Diffusion](Images/smoking-mum.png)
 
-::: callout-note
-## More R Packages
-
-::: columns
-::: {.column width="60%"}
-R offers diverse data visualisation tools, but `ggplot2` stands out for its popularity, providing a versatile and user-friendly approach for creating insightful and polished graphics. This package implements a consistent *grammer of graphics* allowing many different chart types to be created using a single framework.
-:::
-
-::: {.column width="10%"}
-<!-- empty column to create gap -->
-:::
-
-::: {.column width="30%"}
+::: {.column-margin}
 ![Artwork by [\@allison_horst](https://allisonhorst.com/)](images/horst_monsters_ggplot2.png)
-:::
-:::
+
+R offers diverse data visualisation tools, but `ggplot2` stands out for its popularity, providing a versatile and user-friendly approach for creating insightful and polished graphics. This package implements a consistent *grammer of graphics* allowing many different chart types to be created using a single framework.
+
 :::
 
 
@@ -241,13 +236,9 @@ In the previous section we confirmed that babies born to mums who smoked during 
 #| code-fold: true
 library(ggplot2) # Tools for visualising data
 
-birthwt |> 
-  mutate(
-    smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoking', 'Smoking')
-                               )) |> 
 ggplot(
-  aes(x = smokeCategorical, y = bwt, fill=smokeCategorical)) +
+  data = birthwt,
+  aes(x = smoke, y = bwt, fill=smoke)) +
     geom_boxplot() +
       scale_x_discrete("") +
       scale_y_continuous("Birthweight (grams)", labels = scales::comma) +
@@ -267,13 +258,9 @@ Below is a visualisation of the same data using a density plot. If you compare t
 #| code-fold: true
 library(ggplot2) # Tools for visualising data
 
-birthwt |> 
-  mutate(
-    smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoking', 'Smoking')
-                               )) |> 
 ggplot(
-  aes(x = bwt, fill = smokeCategorical, color = smokeCategorical)) +
+  data = birthwt, 
+  aes(x = bwt, fill = smoke, color = smoke)) +
     geom_density(alpha=0.8) +
       scale_x_continuous("Birthweight") +
       scale_y_continuous("Density") +
@@ -289,31 +276,6 @@ ggplot(
 Both plots above illustrate the same messgage, babies born to mums who smoked during pregnancy have a lower birthweight on average, compared to babies of non-smokers, although there is a lot of overlap for both groups. 
 
 
-
-```{r}
-#| echo: true
-#| code-fold: true
-
-birthwt |> 
-  filter(age <= 40) |> 
-  mutate(
-    smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoking', 'Smoking')
-                               )) |> 
-ggplot(
-  aes(x = age, y = bwt, color = smokeCategorical, fill = smokeCategorical, shape = smokeCategorical)) +
-    geom_point() +
-    geom_smooth(method = 'lm') +
-      scale_x_continuous("Maternal age (years)") +
-      scale_y_continuous("Birthweight (grams)", labels = scales::comma) +
-      scale_shape_manual("Smoking status", values = c(21, 22)) +
-      scale_color_manual("Smoking status", values = c('#03d77f', '#fb706a')) +
-      scale_fill_manual("Smoking status", values = lighten(c('#03d77f', '#fb706a'), 0.4)) +
-      labs(title="Birthweight by maternal age and maternal smoking status") +
-      theme_minimal() +
-      theme(legend.position = 'top')
-```
-
 ***
 
 :::: {.column-margin}
@@ -328,17 +290,18 @@ Learn how to tell compelling visual stories with data in [HDAT9800 Visualisation
 
 
 ::: {.webex-check .webex-box}
-### Test your understanding
+### [`r fontawesome::fa('circle-question')` Test your understanding]{style="text-align:center;"}
+
+***
 
 Which R package provides tools for data visualisation? `r mcq(c("MASS", "dplyr", "readr", answer = "ggplot2"))`
 
 ```{r}
 #| echo: false
 opts_p <- c(
-   "Babies born to older mums have lower birthweight, on averaage.",
-   "The association between age and birthweight is the same for smokers and non-smokers.",
-   answer = "Among non-smokers, there is a positive association between maternal age and birthweight.",
-   "Older mums are more likely to be smokers."
+   "Babies born to mums who smoked during pregnancy have higher birthweight, on average.",
+   "Children born to non-smokers always weigh more than children born to non-smokers.",
+   answer = "On average, children born to maternal smokers have lower birthweight."
 )
 ```
 
@@ -349,7 +312,7 @@ Which statement is most accurate based on the figure above?
 
 ***
 
-### Interactive exercise
+### `r fontawesome::fa('code')` Interactive exercise
 
 Now it's your turn to try coding! In this interactive exercise, update the code below to visualise the distribution of birthweight by history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`.  
 
@@ -379,7 +342,7 @@ ggplot(data = birthwt,
 
 The difference in median birthweight between children born to mothers with and without hypertension is approximately `r mcq(c('10', '50', '100', answer='500', '1,000'))` grams.
 
-Among children born to mothers with no history of hypertension, `r mcq(c(answer='25', '50', '75', '1,000'))`% of births weighed 3,500 grams or above.
+Among children born to mothers with no history of hypertension, `r mcq(c('10%', answer='25%', '50%', '75%', '90%'))` of births weighed 3,500 grams or above.
 :::
 
 ***
@@ -397,13 +360,9 @@ Enter the workhorse of statistical modeling – linear regression. At its core, 
 Let's take another look at the grouped scatterplot showing birthweight by maternal smoking status. We can see the distribution of birthweight looks to be higher for babies of non-smoking mums compared to smoking mums. 
 
 ```{r}
-birthwt |> 
-  mutate(
-    smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoking', 'Smoking')
-                               )) |> 
 ggplot(
-  aes(x = smokeCategorical, y = bwt, fill=smokeCategorical, color=smokeCategorical)) +
+  data = birthwt, 
+  aes(x = smoke, y = bwt, fill=smoke, color=smoke)) +
     geom_jitter(shape=21) +
     geom_boxplot(alpha=0.4) +
       scale_x_discrete("") +
@@ -435,15 +394,17 @@ tab_model(model1, digits = 0, title = 'Birthweight', show.r2 = FALSE)
 
 We can interpret this as follows:
 
--   The average birthweight among babies born to non-smokers was 3,056 grams.
--   The 95% confidence interval (CI) for this estimate ranges from 2,294 grams to 3,188 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for non-smokers each time, you would expect the true coefficient to fall within the range 2,294--3,188 grams in 95% of those intervals.
--   The average birthweight among babies born to smokers was 284 grams less than babies born to non-smokers.
--   The 95% confidence interval (CI) for this estimate ranges from -495 grams to -73 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for smokers each time, you would expect the true coefficient to fall within the range -495---73 grams in 95% of those intervals.
+-   The average birthweight among babies born to non-smokers was 3,039 grams.
+-   The 95% confidence interval (CI) for this estimate ranges from 2,908 grams to 3,169 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for non-smokers each time, you would expect the true coefficient to fall within the range 2,908--3,169 grams in 95% of those intervals.
+-   The average birthweight among babies born to smokers was 267 grams less than babies born to non-smokers.
+-   The 95% confidence interval (CI) for this estimate ranges from -475 grams to -59 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for smokers each time, you would expect the true coefficient to fall within the range -475---59 grams in 95% of those intervals.
 
 ::: {.webex-check .webex-box}
-### Test your understanding
+### [`r fontawesome::fa('circle-question')` Test your understanding]{style="text-align:center;"}
 
-The estimated coefficient for maternal smoking is `r fitb(-284)` grams
+***
+
+The estimated coefficient for maternal smoking is `r fitb(-267)` grams
 
 True or False? The 95% confidence interval for the coefficient for maternal smoking includes 0 `r torf(FALSE)`
 :::
@@ -462,7 +423,7 @@ Learn how to model realistically complex health data in [HDAT9700 Statistical Mo
 
 ***
 
-### Interactive exercise
+### `r fontawesome::fa('code')` Interactive exercise
 
 Now it's your turn to try coding! In this interactive exercise, update the code below to model the relationship between birthweight and history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`. 
 
@@ -492,7 +453,7 @@ ggplot(data = birthwt,
 
 The difference in median birthweight between children born to mothers with and without hypertension is approximately `r mcq(c('10', '50', '100', answer='500', '1,000'))` grams.
 
-Among children born to mothers with no history of hypertension, `r mcq(c(answer='25', '50', '75', '1,000'))`% of births weighed 3,500 grams or above.
+Among children born to mothers with no history of hypertension, approximately `r mcq(c('10%', answer='25%', '50%', '75%', '90%'))`% of births weighed 3,500 grams or above.
 :::
 
 ***
