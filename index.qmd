@@ -45,19 +45,19 @@ Birthweight statistics are reported in the annual [Mothers and Babies reports](h
 
 [^1]: Ghimire, P.R.; Mooney, J.; Fox, L.; Dubois, L. Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales. Int. J. Environ. Res. Public Health 2021, 18, 3417. https://doi.org/10.3390/ijerph18073417
 
-*** 
+:::: {.column-margin}
 
 ::: callout-tip
-## Studying Health Data Science at UNSW
+## Studying Health Data Science at UNSW Sydney
 
 Learn about how data are generated and used in the Australian health system in [HDAT9100 Context for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9100).
 :::
 
-***
-
-### Test your understanding
+::::
 
 ::: {.webex-check .webex-box}
+### Test your understanding
+
 True or False? A boy born weighing 2.2kg would be classified as low birthweight? `r torf(TRUE)`
 
 ```{r, results='asis', echo = FALSE}
@@ -80,6 +80,8 @@ cat("Which of the following is **not** a risk factor for low birthweight?", long
 ### Introduction 
 
 Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets, including the `birthwt` dataset which has ten variables collected on 189 mother-baby pairs The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
+
+![created by Stable Diffusion](Images/expecting-mum.png)
 
 The `birthwt` dataset, is shipped with the `MASS` R package, so we will load this first by calling `library(MASS)`. We'll also load the `dplyr` package, which has helpful tools for data manipulation.
 
@@ -158,12 +160,15 @@ birthwt |>
 There is clearly an association between maternal smoking and birthweight. The average birthweight was 3,056 grams for children born to non-smokers compared to 2,772 grams for children born to mums who smoked during pregnancy.
 
 ***
+:::: {.column-margin}
 
 ::: callout-tip
-## Studying Health Data Science at UNSW
+## Studying Health Data Science at UNSW Sydney
 
 Learn how to extract actionable insights from health data in [HDAT9200 Statistical Foundations for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9200).
 :::
+
+::::
 
 ***
 
@@ -208,7 +213,7 @@ The difference in birthweight between children born to mothers with and without 
 
 Imagine being armed with the ability to uncover hidden patterns, communicate complex findings, and make impactful decisions that directly influence health outcomes. That's precisely what data visualization empowers you to do!
 
-![created by Stable Diffusion](Images/expecting-mum.png)
+![created by Stable Diffusion](Images/smoking-mum.png)
 
 ::: callout-note
 ## More R Packages
@@ -311,17 +316,20 @@ ggplot(
 
 ***
 
+:::: {.column-margin}
+
 ::: callout-tip
-## Studying Health Data Science at UNSW
+## Studying Health Data Science at UNSW Sydney
 
 Learn how to tell compelling visual stories with data in [HDAT9800 Visualisation & Communication](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9800).
 :::
 
-***
+::::
 
-### Test your understanding
 
 ::: {.webex-check .webex-box}
+### Test your understanding
+
 Which R package provides tools for data visualisation? `r mcq(c("MASS", "dplyr", "readr", answer = "ggplot2"))`
 
 ```{r}
@@ -382,7 +390,7 @@ Among children born to mothers with no history of hypertension, `r mcq(c(answer=
 
 Statistical modeling is the cornerstone of evidence-based decision-making in healthcare. By crunching numbers and analysing patterns, we gain insights into disease trends, treatment effectiveness, and the factors influencing health outcomes. It's like having a powerful magnifying glass that allows us to zoom in on the crucial details within a vast dataset.
 
-![created by Stable Diffusion](Images/smoking-mum.png)
+![created by Stable Diffusion](Images/reading-mum.png)
 
 Enter the workhorse of statistical modeling – linear regression. At its core, linear regression helps us explore the linear relationship between a dependent variable and one or more independent variables. Suppose we're examining the impact of factors like maternal age, smoking, and hypertension on birthweight. Linear regression enables us to quantify these relationships, providing us with coefficients that represent the strength and direction of each influence. It's like having a mathematical roadmap to understand how changes in one variable correlate with changes in another.
 
@@ -432,9 +440,9 @@ We can interpret this as follows:
 -   The average birthweight among babies born to smokers was 284 grams less than babies born to non-smokers.
 -   The 95% confidence interval (CI) for this estimate ranges from -495 grams to -73 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for smokers each time, you would expect the true coefficient to fall within the range -495---73 grams in 95% of those intervals.
 
+::: {.webex-check .webex-box}
 ### Test your understanding
 
-::: {.webex-check .webex-box}
 The estimated coefficient for maternal smoking is `r fitb(-284)` grams
 
 True or False? The 95% confidence interval for the coefficient for maternal smoking includes 0 `r torf(FALSE)`
@@ -442,11 +450,15 @@ True or False? The 95% confidence interval for the coefficient for maternal smok
 
 ***
 
+:::: {.column-margin}
+
 ::: callout-tip
 ## Studying Health Data Science at UNSW
 
 Learn how to model realistically complex health data in [HDAT9700 Statistical Modelling II](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9700).
 :::
+
+::::
 
 ***
 
@@ -491,4 +503,3 @@ Embarking on a career in Health data Science is a exciting, challenging, and rew
 
 I encourage you to dive into the vibrant world of Health Data Science with enthusiasm and curiosity. Remember to check out our second introductory tutorial focusing on [Python coding and Machine Learning](https://srap-ieap.org/wp-content/uploads/2020/01/Captura-de-pantalla-2020-01-23-a-las-10.45.29-p.-m..png) and read about the [student experience](https://www.unsw.edu.au/research/cbdrh/student-experience) at the Centre for Big Data Research in Health. 
 
-![created by Stable Diffusion](Images/reading-mum.png)
