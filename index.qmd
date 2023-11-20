@@ -8,59 +8,56 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 library(webexercises)
 library(colorspace)
+library(sjPlot)
 ```
 
+## Overview
 
-## Introduction
+Welcome! In this interactive tutorial you will learn how to use data science skills to analyses maternal and child health. Specifically you will be exploring birthweight and factors that can lead to low birthweight using the R statistical software.
 
-Welcome! In this interactive tutorial you will see how to use data science skills to analyses maternal and child health. Specifically you will be exploring birthweight and factors that can lead to low birthweight using the R statistical software.
+***Note** This section is designed as an interactive tutorial, so get ready to be presented with questions and exercises! The reading time is around 20 minutes and this should give you a gentle introduction to the types of content covered in the Masters of Science in Health Data Science.*
 
 ### Why Study Birthweight?
 
-Birthweight is a crucial indicator of a newborn's health and well-being. It serves as a fundamental metric in assessing a baby's initial growth and development. Moreover, birthweight plays a pivotal role in predicting the infant's short-term and long-term health outcomes. Babies born with low birthweight, typically defined as weighing less than 2,500 grams (5.5 pounds) at birth, face increased risks of complications, developmental issues, and chronic health conditions.
+Birthweight is a crucial indicator of a newborn's health and well-being. It serves as a fundamental metric in assessing a baby's initial growth and development. Moreover, birthweight plays a pivotal role in predicting the infant's short-term and long-term health outcomes. Babies born with low birthweight, typically defined as weighing less than 2,500 grams at birth, face increased risks of complications, developmental issues, and chronic health conditions.
 
 ![created by Stable Diffusion](Images/newborn.png)
-
-
-
-
 
 ### Factors Influencing Low Birthweight
 
 There are many factors that may contribute to low birthweight:
 
-* **Maternal Nutrition**: Adequate maternal nutrition is paramount for the proper growth and development of the fetus. Poor maternal nutrition, whether due to malnutrition or inadequate dietary intake, can result in low birthweight.
+-   **Maternal Nutrition**: Adequate maternal nutrition is paramount for the proper growth and development of the fetus.
 
-* **Maternal Health Conditions**: Certain maternal health conditions, such as hypertension, diabetes, and infections, can impact fetal growth and contribute to low birthweight. Managing and treating these conditions during pregnancy is crucial for the well-being of both the mother and the baby.
+-   **Maternal Health Conditions**: Certain maternal health conditions, such as hypertension, diabetes, and infections, can impact fetal growth and contribute to low birthweight.
 
-* **Lifestyle Factors**: Maternal lifestyle choices, including smoking, alcohol consumption, and illicit drug use, have been linked to low birthweight. These substances can negatively affect fetal development and increase the risk of complications.
+-   **Lifestyle Factors**: Maternal lifestyle choices, including smoking, alcohol consumption, and illicit drug use, have been linked to low birthweight.
 
-* **Socioeconomic Factors**: Socioeconomic status is a significant determinant of maternal and child health. Limited access to healthcare, education, and resources can contribute to low birthweight. Understanding these social determinants allows for targeted interventions to address disparities.
+-   **Socioeconomic Factors**: Limited access to healthcare, education, and resources can contribute to low birthweight.
 
-* **Multiple Pregnancies**: Twins, triplets, or other multiple pregnancies are at a higher risk of low birthweight due to the shared resources in the womb.
-
+-   **Multiple Pregnancies**: Twins, triplets, or other multiple pregnancies are at a higher risk of low birthweight due to the shared resources in the womb.
 
 ### Birthweight in context
 
-In New South Wales, data on birthweight are routinely recorded in the Perinatal Data Collection, a population-based surveillance system covering all births in NSW public and private hospitals, as well as home births. It encompasses all live births, and stillbirths of at least 20
-weeks gestation or at least 400 grams birthweight. 
+In New South Wales, data on birthweight are routinely recorded in the Perinatal Data Collection, a population-based surveillance system covering all births in NSW public and private hospitals, as well as home births.
 
-Birthweight statistics are regularly reported on, for example in the [annual Mothers and Babies reports](https://www.health.nsw.gov.au/hsnsw/Pages/mothers-and-babies-reports.aspx), produced by NSW Health. Birthweight is also the subject of numerous academic studies, for example, the recent journal article [Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales](https://doi.org/10.3390/ijerph18073417)[^1] 
-
-::: {.callout-tip}
-## Studying Health Data Science at UNSW
-
-Learn about how data are generated and used in the Australian health system in the course [HDAT9100 Context for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9100).
-:::
-
-
+Birthweight statistics are reported in the annual [Mothers and Babies reports](https://www.health.nsw.gov.au/hsnsw/Pages/mothers-and-babies-reports.aspx), produced by NSW Health. Birthweight is also the subject of numerous academic studies, for example, the recent journal article [Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales](https://doi.org/10.3390/ijerph18073417)[^1]
 
 [^1]: Ghimire, P.R.; Mooney, J.; Fox, L.; Dubois, L. Smoking Cessation during the Second Half of Pregnancy Prevents Low Birth Weight among Australian Born Babies in Regional New South Wales. Int. J. Environ. Res. Public Health 2021, 18, 3417. https://doi.org/10.3390/ijerph18073417
 
-#### Test your understanding
+*** 
+
+::: callout-tip
+## Studying Health Data Science at UNSW
+
+Learn about how data are generated and used in the Australian health system in [HDAT9100 Context for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9100).
+:::
+
+***
+
+### Test your understanding
 
 ::: {.webex-check .webex-box}
-
 True or False? A boy born weighing 2.2kg would be classified as low birthweight? `r torf(TRUE)`
 
 ```{r, results='asis', echo = FALSE}
@@ -73,23 +70,42 @@ opts <- c(
 
 cat("Which of the following is **not** a risk factor for low birthweight?", longmcq(opts))
 ```
-
 :::
 
 
+***
 
-## Data analysis
+## Data Analysis
 
-Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets. For this example, we will use the `birthwt` dataset. This dataset includes ten variables collected on 189 mother-baby dyads. The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
+### Introduction 
 
-The `birthwt` dataset, is shipped with the `MASS` R package, so we will load this first by calling `library(MASS)`. We'll also load the `dplyr` package, which has helpful tools for data manipulation. 
+Great, let's get started with some data analysis! In order to explore the relationship between birthweight and other factors we are going to need some data. Luckily, the R ecosystem is chockablock with example datasets, including the `birthwt` dataset which has ten variables collected on 189 mother-baby pairs The data were originally collected at Baystate Medical Center, Springfield, Massachusetts during 1986.
 
-::: {.callout-note}
+The `birthwt` dataset, is shipped with the `MASS` R package, so we will load this first by calling `library(MASS)`. We'll also load the `dplyr` package, which has helpful tools for data manipulation.
+
+::: callout-note
 ## R Packages
 
+::: columns
+::: {.column width="60%"}
 R packages are collections of R functions, data, and compiled code bundled together in a standardised format. These packages extend the functionality of base R by providing additional tools for specific tasks or domains. R packages can be created by anyone and are typically shared with the R community through platforms like CRAN (Comprehensive R Archive Network) or GitHub.
-
 :::
+
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="30%"}
+![`dplyr` is a popular and highly useful package for data manipulation. Artwork by [\@allison_horst](https://allisonhorst.com/)](images/horst_monsters_data_wrangling.png)
+:::
+:::
+:::
+
+Below is an example of the R code you would write to load the required packages and view the first few records for the `birthwt` dataset.
+
+-   The `library()` function loads packages
+-   The `select()` function selects specific variables
+-   The `head()` function prints the first six observations
 
 ```{r}
 #| echo: true
@@ -102,11 +118,14 @@ birthwt |>
 
 ```
 
+To get an idea of the data, we have selected the following four variables:
 
-* **age** Mother's age in years
-* **smoke** Smoking status during pregnancy (0=No, 1 = Yes)
-* **ht** History of hypertension  (0=No, 1 = Yes)
-* **bwt** Birthweight in grams.
+-   **age** Mother's age in years
+-   **smoke** Smoking status during pregnancy (0=No, 1 = Yes)
+-   **ht** History of hypertension (0=No, 1 = Yes)
+-   **bwt** Birthweight in grams.
+
+Let's look at a statistical summary of each of these variables. We can do this with the `summary()` function, as below.
 
 ```{r}
 #| echo: true
@@ -116,16 +135,17 @@ birthwt |>
 
 ```
 
-For example, we can see that the median maternal age is 23 years and 39% of mums in this dataset smoked smoked during pregnancy.
+For example, we can see that in this dataset the median maternal age is 23 years and around 39% of mums smoked during pregnancy.
 
 ### Test your understanding
 
 ::: {.webex-check .webex-box}
-
 True or False? The oldest maternal age recorded was 40 years? `r torf(FALSE)`
 
 The median birthweight was `r fitb(2977)` grams.
 :::
+
+Let's compare the average birthweight among mums who did and did not smoke during pregnancy. One way to do this is to use the `group_by()` function to group the data by smoking status and then calculate the mean in each group, as below.
 
 ```{r}
 #| echo: true
@@ -135,15 +155,25 @@ birthwt |>
 
 ```
 
-::: {.callout-tip}
+There is clearly an association between maternal smoking and birthweight. The average birthweight was 3,056 grams for children born to non-smokers compared to 2,772 grams for children born to mums who smoked during pregnancy.
+
+***
+
+::: callout-tip
 ## Studying Health Data Science at UNSW
 
-Learn how to extract actionable insights from health data in the course [HDAT9200 Statistical Foundations for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9200).
+Learn how to extract actionable insights from health data in [HDAT9200 Statistical Foundations for Health Data Science](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9200).
 :::
 
-::: {.panel-tabset .nav-pills}
+***
 
+### Interactive exercise
+
+Now it's your turn to try coding! In this interactive exercise, update the code below to calculate the average birthweight among mums who did and did not have a history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`. 
+
+::: {.panel-tabset .nav-pills}
 ## Exercise
+
 
 ```{r}
 #| echo: false
@@ -160,21 +190,46 @@ birthwt |>
   summarise(mean = mean(bwt))
 
 ```
-
 :::
 
 ::: {.webex-check .webex-box}
+**Answer the questions below based on the results of your analysis:**
 
 True or False? Children born to mothers with a history of hypertension have lower birthweights on average? `r torf(TRUE)`
 
 The difference in birthweight between children born to mothers with and without hypertension (to the nearest gram) is `r fitb(435)` grams.
 :::
 
-***
+------------------------------------------------------------------------
+
+## Data Visualisaion
+
+### Introduction
+
+Imagine being armed with the ability to uncover hidden patterns, communicate complex findings, and make impactful decisions that directly influence health outcomes. That's precisely what data visualization empowers you to do!
 
 ![created by Stable Diffusion](Images/expecting-mum.png)
 
-## Data Visualisaion
+::: callout-note
+## More R Packages
+
+::: columns
+::: {.column width="60%"}
+R offers diverse data visualisation tools, but `ggplot2` stands out for its popularity, providing a versatile and user-friendly approach for creating insightful and polished graphics. This package implements a consistent *grammer of graphics* allowing many different chart types to be created using a single framework.
+:::
+
+::: {.column width="10%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="30%"}
+![Artwork by [\@allison_horst](https://allisonhorst.com/)](images/horst_monsters_ggplot2.png)
+:::
+:::
+:::
+
+
+In the previous section we confirmed that babies born to mums who smoked during pregnancy had lower average birthweight compared to those that did not smoke. Let's use data visualisation to compare the full distribution of birthweights by maternal smoking status. Note that you can click on the [`r fontawesome::fa("play")` Code]{style="color:#6c757d;font-size:0.9em"} icon to reveal the underlying code.
 
 ```{r}
 #| echo: true
@@ -184,17 +239,51 @@ library(ggplot2) # Tools for visualising data
 birthwt |> 
   mutate(
     smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoker', 'Smoker')
+                               labels = c('Non-smoking', 'Smoking')
                                )) |> 
 ggplot(
-  aes(x = smokeCategorical, y = bwt)) +
+  aes(x = smokeCategorical, y = bwt, fill=smokeCategorical)) +
     geom_boxplot() +
       scale_x_discrete("") +
       scale_y_continuous("Birthweight (grams)", labels = scales::comma) +
+      scale_fill_manual("Smoking status", values = c('#03d77f', '#fb706a')) +
       labs(title="Birthweight by maternal smoking status") +
-      theme_minimal()
+      theme_minimal() +
+      theme(legend.position = 'none')
 
 ```
+
+This type of chart is called a grouped boxplot. There are two boxplots presented, one for the non-smoking group and one for the smoking group. The dark horizontal line at the centre of the box indicates the median birthweight for each group. The upper and lower borders of the boxes indicate the 25th and 75th quartiles and the vertical spikes emerging at either end indicate the full range of the data. 
+
+Below is a visualisation of the same data using a density plot. If you compare the code for this plot to the previous one, you will see that very little has changed. This is the power of the `ggplot` package: one consitent framework can produce many different types of graphs!
+
+```{r}
+#| echo: true
+#| code-fold: true
+library(ggplot2) # Tools for visualising data
+
+birthwt |> 
+  mutate(
+    smokeCategorical = factor(smoke, 
+                               labels = c('Non-smoking', 'Smoking')
+                               )) |> 
+ggplot(
+  aes(x = bwt, fill = smokeCategorical, color = smokeCategorical)) +
+    geom_density(alpha=0.8) +
+      scale_x_continuous("Birthweight") +
+      scale_y_continuous("Density") +
+      scale_color_manual("Smoking status", values = c('#03d77f', '#fb706a')) +
+      scale_fill_manual("Smoking status", values = lighten(c('#03d77f', '#fb706a'), 0.4)) +
+      labs(title="Birthweight by maternal smoking status") +
+      theme_minimal() +
+      theme(legend.position = 'top')
+
+```
+
+
+Both plots above illustrate the same messgage, babies born to mums who smoked during pregnancy have a lower birthweight on average, compared to babies of non-smokers, although there is a lot of overlap for both groups. 
+
+
 
 ```{r}
 #| echo: true
@@ -204,7 +293,7 @@ birthwt |>
   filter(age <= 40) |> 
   mutate(
     smokeCategorical = factor(smoke, 
-                               labels = c('Non-smoker', 'Smoker')
+                               labels = c('Non-smoking', 'Smoking')
                                )) |> 
 ggplot(
   aes(x = age, y = bwt, color = smokeCategorical, fill = smokeCategorical, shape = smokeCategorical)) +
@@ -220,17 +309,19 @@ ggplot(
       theme(legend.position = 'top')
 ```
 
-::: {.callout-tip}
+***
+
+::: callout-tip
 ## Studying Health Data Science at UNSW
 
-Learn how to tell compelling visual stories with data in the course [HDAT9800 Visualisation & Communication](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9800).
+Learn how to tell compelling visual stories with data in [HDAT9800 Visualisation & Communication](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9800).
 :::
 
+***
 
 ### Test your understanding
 
 ::: {.webex-check .webex-box}
-
 Which R package provides tools for data visualisation? `r mcq(c("MASS", "dplyr", "readr", answer = "ggplot2"))`
 
 ```{r}
@@ -246,67 +337,158 @@ opts_p <- c(
 Which statement is most accurate based on the figure above?
 
 `r longmcq(opts_p)`
-
 :::
 
-
+***
 
 ### Interactive exercise
+
+Now it's your turn to try coding! In this interactive exercise, update the code below to visualise the distribution of birthweight by history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`.  
+
+::: {.panel-tabset .nav-pills}
+
+## Exercise
 
 ```{r}
 #| echo: false
 
-knitr::include_url("https://cbdrh.shinyapps.io/birthweight-tute-2", height='800px')
+knitr::include_url("https://cbdrh.shinyapps.io/birthweight-tute-2", height='600px')
 ```
 
 ## Solution
-
 ```{r}
 #| echo: true
 
-
+ggplot(data = birthwt, 
+       aes(x=ht, y=bwt)) + 
+  geom_boxplot()
 ```
+
+:::
+
+::: {.webex-check .webex-box}
+**Answer the questions below based on the results of your analysis:**
+
+The difference in median birthweight between children born to mothers with and without hypertension is approximately `r mcq(c('10', '50', '100', answer='500', '1,000'))` grams.
+
+Among children born to mothers with no history of hypertension, `r mcq(c(answer='25', '50', '75', '1,000'))`% of births weighed 3,500 grams or above.
+:::
+
+***
+
+## Statistical Modelling
+
+### Introduction 
+
+Statistical modeling is the cornerstone of evidence-based decision-making in healthcare. By crunching numbers and analysing patterns, we gain insights into disease trends, treatment effectiveness, and the factors influencing health outcomes. It's like having a powerful magnifying glass that allows us to zoom in on the crucial details within a vast dataset.
 
 ![created by Stable Diffusion](Images/smoking-mum.png)
 
-## Statistical Modelling
+Enter the workhorse of statistical modeling – linear regression. At its core, linear regression helps us explore the linear relationship between a dependent variable and one or more independent variables. Suppose we're examining the impact of factors like maternal age, smoking, and hypertension on birthweight. Linear regression enables us to quantify these relationships, providing us with coefficients that represent the strength and direction of each influence. It's like having a mathematical roadmap to understand how changes in one variable correlate with changes in another.
+
+Let's take another look at the grouped scatterplot showing birthweight by maternal smoking status. We can see the distribution of birthweight looks to be higher for babies of non-smoking mums compared to smoking mums. 
+
+```{r}
+birthwt |> 
+  mutate(
+    smokeCategorical = factor(smoke, 
+                               labels = c('Non-smoking', 'Smoking')
+                               )) |> 
+ggplot(
+  aes(x = smokeCategorical, y = bwt, fill=smokeCategorical, color=smokeCategorical)) +
+    geom_jitter(shape=21) +
+    geom_boxplot(alpha=0.4) +
+      scale_x_discrete("") +
+      scale_y_continuous("Birthweight (grams)", labels = scales::comma) +
+      scale_color_manual("Smoking status", values = c('#03d77f', '#fb706a')) +
+      scale_fill_manual("Smoking status", values = lighten(c('#03d77f', '#fb706a'), 0.4)) +
+      labs(title="Birthweight by maternal smoking status") +
+      theme_minimal() +
+      theme(legend.position = 'none')
+
+```
+
+But can we be sure this is the right interpretation? Is the difference meaningful or could it just be noise in the data or random chance? We can fit a linear regression model to quantify the hypothesised relationship between smoking status and birthweight as well as get a sense of the certainty of the estimate. 
+
+Below is the code to fit a linear model in R using the `lm()` function. Note that we specify the dependent variable `bwt`, the independent variable `smoke`, and the dataset `birthwt`.
 
 ```{r}
 #| echo: true
 model1 <- lm(bwt ~ smoke, data = birthwt)
-
-library(sjPlot)
-tab_model(model1, digits = 0, title = 'Birthweight')
 ```
+
+And here are the model results, presented as a table.
+
+```{r}
+#| echo: true
+tab_model(model1, digits = 0, title = 'Birthweight', show.r2 = FALSE)
+```
+
 
 We can interpret this as follows:
 
-* The average birthweight among babies born to non-smokers was 3,056 grams. 
-* The 95% confidence interval (CI) for this estimate ranges from 2,294 grams to 3,188 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for non-smokers each time, you would expect the true coefficient to fall within the range 2,294--3,188 grams in 95% of those intervals.
-* The average birthweight among babies born to smokers was 284 grams less than babies born to non-smokers. 
-* The 95% confidence interval (CI) for this estimate ranges from -495 grams to -73 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for smokers each time, you would expect the true coefficient to fall within the range -495---73 grams in 95% of those intervals.
-
+-   The average birthweight among babies born to non-smokers was 3,056 grams.
+-   The 95% confidence interval (CI) for this estimate ranges from 2,294 grams to 3,188 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for non-smokers each time, you would expect the true coefficient to fall within the range 2,294--3,188 grams in 95% of those intervals.
+-   The average birthweight among babies born to smokers was 284 grams less than babies born to non-smokers.
+-   The 95% confidence interval (CI) for this estimate ranges from -495 grams to -73 grams. This is the range of values within which we are 95% confident that the true population coefficient lies. In other words, if you were to conduct the same study multiple times and calculate a 95% confidence interval for the coefficient for smokers each time, you would expect the true coefficient to fall within the range -495---73 grams in 95% of those intervals.
 
 ### Test your understanding
 
-```{r}
-model2 <- lm(bwt ~ smoke + age, data = birthwt)
+::: {.webex-check .webex-box}
+The estimated coefficient for maternal smoking is `r fitb(-284)` grams
 
-tab_model(model2, digits = 0, title = 'Birthweight')
-```
+True or False? The 95% confidence interval for the coefficient for maternal smoking includes 0 `r torf(FALSE)`
+:::
 
-::: {.callout-tip}
+***
+
+::: callout-tip
 ## Studying Health Data Science at UNSW
 
-Learn how to tell model realistically complex health data in the course [HDAT9700 Statistical Modelling II](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9700).
+Learn how to model realistically complex health data in [HDAT9700 Statistical Modelling II](https://hds-hub.cbdrh.med.unsw.edu.au/courses.html#hdat9700).
+:::
+
+***
+
+### Interactive exercise
+
+Now it's your turn to try coding! In this interactive exercise, update the code below to model the relationship between birthweight and history of hypertension. Remember, history of hypertension is recorded in the variable named `ht`. 
+
+::: {.panel-tabset .nav-pills}
+
+## Exercise
+
+```{r}
+#| echo: false
+
+knitr::include_url("https://cbdrh.shinyapps.io/birthweight-tute-3", height='400px')
+```
+
+## Solution
+```{r}
+#| echo: true
+
+ggplot(data = birthwt, 
+       aes(x=ht, y=bwt)) + 
+  geom_boxplot()
+```
+
 :::
 
 ::: {.webex-check .webex-box}
+**Answer the questions below based on the results of your analysis:**
 
-The estimated coefficient for maternal age is `r fitb(11)`
+The difference in median birthweight between children born to mothers with and without hypertension is approximately `r mcq(c('10', '50', '100', answer='500', '1,000'))` grams.
 
-True or False? The 95% confidence interval for the coefficient of age includes 0 `r torf(TRUE)`
+Among children born to mothers with no history of hypertension, `r mcq(c(answer='25', '50', '75', '1,000'))`% of births weighed 3,500 grams or above.
 :::
 
+***
 
+## Next steps
 
+Embarking on a career in Health data Science is a exciting, challenging, and rewarding journey. As your numerical literacy expands, you gain the ability to immerse yourself in the rows of a complex health dataset, much like delving into the chapters of a novel. In this vast narrative of data, each variable and data point becomes a sentence, and through meticulous analysis, you decipher the underlying story. Just as a seasoned reader navigates plot twists and character developments, a proficient data scientist navigates through statistical intricacies, extracting meaningful insights that unfold like a well-crafted narrative. The more adept you become at interpreting these data "chapters", the richer and more nuanced the story of health trends and patterns becomes. And just like a compelling novel, the journey of analysing data in health science is simultaneously challenging and profoundly rewarding.
+
+I encourage you to dive into the vibrant world of Health Data Science with enthusiasm and curiosity. Remember to check out our second introductory tutorial focusing on [Python coding and Machine Learning](https://srap-ieap.org/wp-content/uploads/2020/01/Captura-de-pantalla-2020-01-23-a-las-10.45.29-p.-m..png) and read about the [student experience](https://www.unsw.edu.au/research/cbdrh/student-experience) at the Centre for Big Data Research in Health. 
+
+![created by Stable Diffusion](Images/reading-mum.png)
